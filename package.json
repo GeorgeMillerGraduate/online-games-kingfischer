@@ -1,0 +1,1 @@
+{"name":"jenga-kingfischer","version":"1.0.0","type":"module","private":true,"scripts":{"test":"node tests/run.js"},"license":"GPL-3.0-or-later"}

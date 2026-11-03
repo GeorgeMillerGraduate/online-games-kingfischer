@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="See inside KingFischer: play chess and explore the engine's real search, candidate positions and evaluation."
+    />
+    <title>KingFischer · JengaCode</title>
+    <link rel="stylesheet" href="style.css?v=1" />
+    <script defer src="vendor/jquery-3.7.1.min.js"></script>
+    <script type="module" src="js/app.js?v=1"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to chessboard</a>
+    <header class="site-header">
+      <a href="/" class="brand" aria-label="JengaCode home"
+        ><svg viewBox="0 0 80 80" aria-hidden="true">
+          <g fill="none" stroke="currentColor">
+            <circle cx="40" cy="40" r="25" />
+            <ellipse cx="40" cy="40" rx="33" ry="7" />
+            <ellipse cx="40" cy="40" rx="7" ry="33" />
+            <path d="M40 3 47 33 77 40 47 47 40 77 33 47 3 40 33 33Z" />
+          </g>
+          <path
+            fill="currentColor"
+            d="M40 8 40 40 33 33ZM72 40 40 40 47 33ZM40 72 40 40 47 47ZM8 40 40 40 33 47Z"
+          /></svg
+        ><span
+          >Jenga<span class="brand-code">Code</span
+          ><small>Computing · mathematics · ideas</small></span
+        ></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="/">Home</a><a href="/apps/">Applications</a
+        ><a href="/blog/">Journal</a
+        ><a href="/qualifications/">Qualifications</a>
+      </nav>
+    </header>
+    <div class="workbench">
+      <aside class="left">
+        <p class="eyebrow">The engine workbench / 01</p>
+        <h2>Inside every decision.</h2>
+        <nav class="section-nav" aria-label="Engine notebook">
+          <a class="active" href="#main"
+            ><span>01</span> Search &amp; play <b>↗</b></a
+          ><a href="#search-tree"><span>02</span> Search tree <b>↗</b></a
+          ><a href="#evaluation"
+            ><span>03</span> Position evaluation <b>↗</b></a
+          ><a href="#table-panel"
+            ><span>04</span> Transposition table <b>↗</b></a
+          >
+        </nav>
+        <figure class="study">
+          <img
+            src="assets/kingfischer-study.webp"
+            alt="A kingfisher perched on a brass chess king, with an imagined Victorian portrait of Bobby Fischer behind it"
+            width="1024"
+            height="1536"
+          />
+          <figcaption>A king. A fisher. A little wordplay.</figcaption>
+        </figure>
+        <section class="settings">
+          <h3>Set up the experiment</h3>
+          <label for="mode">Play mode</label
+          ><select id="mode">
+            <option value="player">Player vs engine</option>
+            <option value="engines">Engine vs engine</option>
+            <option value="analysis">Analyse a position</option></select
+          ><label for="human-color">Your pieces</label
+          ><select id="human-color">
+            <option value="0">White</option>
+            <option value="1">Black</option>
+          </select>
+          <div class="strengths">
+            <div>
+              <label for="white-strength">White engine</label
+              ><select id="white-strength"></select>
+            </div>
+            <div>
+              <label for="black-strength">Black engine</label
+              ><select id="black-strength"></select>
+            </div>
+          </div>
+          <p class="fine">
+            Independent effort levels, not calibrated Elo ratings.
+          </p>
+          <label for="time-limit">Maximum seconds per move</label>
+          <div class="time-presets">
+            <button data-time="1">1 s</button
+            ><button class="chosen" data-time="3">3 s</button
+            ><button data-time="10">10 s</button
+            ><input
+              id="time-limit"
+              aria-label="Custom search time in seconds"
+              type="number"
+              min="0.1"
+              max="120"
+              step="0.1"
+              value="3"
+            />
+          </div>
+          <label for="graphics-rate">Graphics updates</label
+          ><select id="graphics-rate">
+            <option value="2">2 per second · lighter</option>
+            <option value="5" selected>5 per second · balanced</option>
+            <option value="10">10 per second · detailed</option>
+          </select>
+          <label for="evaluation-mode">Position evaluator</label
+          ><select id="evaluation-mode">
+            <option value="classic">Explainable classic · ready</option>
+            <option value="nnue">Original KingFischer NNUE</option></select
+          ><button id="load-bundled" class="load-network">
+            ↓ Load bundled NNUE · 94 MiB</button
+          ><label class="file-button" for="network-file"
+            >↑ Load original .nnue weights<input
+              id="network-file"
+              type="file"
+              accept=".nnue"
+          /></label>
+          <p id="network-status" class="fine">
+            Classic mode needs no download. Original NNUE weights are supplied
+            in the full package.
+          </p>
+        </section>
+      </aside>
+      <main id="main" tabindex="-1">
+        <div class="title-row">
+          <div>
+            <p class="eyebrow">Chess / a closer look at the search</p>
+            <h1>KingFischer<span class="version">JS</span></h1>
+            <p class="subtitle">Explore the moves behind the next move.</p>
+          </div>
+          <span class="edition">An open engine<br />A visible process</span>
+        </div>
+        <div class="search-strip">
+          <span class="status-dot"></span
+          ><strong id="engine-state">Ready to play</strong
+          ><span id="depth-readout">Depth —</span
+          ><span id="timer-readout">3.0 s / move</span
+          ><progress
+            id="time-progress"
+            max="1"
+            value="0"
+            aria-label="Search time used"
+          ></progress>
+        </div>
+        <div class="board-heading">
+          <span id="turn-label">White to move</span
+          ><span class="board-actions"
+            ><button id="undo" title="Take back a move">↶ Undo</button
+            ><button id="flip" title="Flip board">⇅ Flip</button
+            ><button id="new-game">New game</button></span
+          >
+        </div>
+        <div class="board-surround">
+          <div class="evaluation-gauge" aria-label="Position evaluation">
+            <div id="eval-fill"></div>
+            <span id="gauge-score">0.00</span>
+          </div>
+          <div id="main-board"></div>
+        </div>
+        <div class="board-caption">
+          <span id="board-notice"
+            >Click or drag a piece to make a legal move.</span
+          ><button id="return-live" hidden>← Return to live board</button>
+        </div>
+        <div class="primary-controls">
+          <button class="primary" id="start">▶ Start engine</button
+          ><button id="pause">Ⅱ Pause</button
+          ><button id="step">▸ One depth</button
+          ><button id="use-best">■ Stop &amp; use best</button>
+        </div>
+        <p id="message" class="message" role="status" aria-live="polite">
+          Play White; KingFischer will reply as Black. Start engine lets it move
+          for the current side.
+        </p>
+        <section class="pv-section">
+          <div class="section-heading">
+            <h2>Current best line</h2>
+            <span id="line-depth">Awaiting a search</span>
+          </div>
+          <div id="principal-variation" class="pv-line">
+            <span class="muted"
+              >A completed search depth will appear here.</span
+            >
+          </div>
+        </section>
+        <section>
+          <div class="section-heading">
+            <h2>Candidate positions</h2>
+            <span>Preview without changing the game.</span>
+          </div>
+          <div id="candidates" class="candidates"></div>
+        </section>
+        <details class="tools">
+          <summary>
+            Moves, positions &amp; exports <span>FEN · PGN</span>
+          </summary>
+          <div class="tools-inner">
+            <div id="move-list" class="move-list">No moves yet.</div>
+            <label for="fen-input">Load an orthodox chess position (FEN)</label
+            ><textarea id="fen-input" rows="2" spellcheck="false"></textarea>
+            <div class="tool-buttons">
+              <button id="load-fen">Load position</button
+              ><button id="copy-fen">Copy FEN</button
+              ><button id="export-pgn">↓ Export PGN</button>
+            </div>
+          </div>
+        </details>
+      </main>
+      <aside class="right">
+        <p class="eyebrow">The search notebook</p>
+        <div class="notebook-heading">
+          <h2>Thinking, made visible.</h2>
+          <span id="search-badge">LIVE DATA</span>
+        </div>
+        <section id="search-tree">
+          <div class="section-heading">
+            <h3>The explored tree</h3>
+            <span id="tree-depth">Sampled · bounded</span>
+          </div>
+          <svg
+            id="tree"
+            viewBox="0 0 480 260"
+            role="img"
+            aria-label="Real searched branches; no search yet"
+          ></svg>
+          <div class="tree-legend">
+            <span><i class="teal"></i> Candidate line</span
+            ><span><i class="copper"></i> Searched</span
+            ><span>× Cutoff observed</span>
+          </div>
+          <p class="fine" id="tree-note">
+            Search branches appear as the engine explores. The full tree is too
+            large to draw.
+          </p>
+        </section>
+        <section id="evaluation">
+          <div class="section-heading">
+            <h3>Position score <small>· White</small></h3>
+            <strong id="position-score" class="score">0.00</strong>
+          </div>
+          <div id="evaluation-bars"></div>
+          <p class="fine" id="evaluation-note">
+            Classic evaluation of the live board. Values are centipawns.
+          </p>
+        </section>
+        <section class="activity">
+          <h3>Search activity</h3>
+          <dl class="stats">
+            <div>
+              <dt>Positions searched</dt>
+              <dd id="nodes">0</dd>
+            </div>
+            <div>
+              <dt>Nodes / second</dt>
+              <dd id="nps">—</dd>
+            </div>
+            <div>
+              <dt>Quiescence nodes</dt>
+              <dd id="qnodes">0</dd>
+            </div>
+            <div>
+              <dt>Table hits</dt>
+              <dd id="tt-hits">0</dd>
+            </div>
+            <div>
+              <dt>Beta cutoffs</dt>
+              <dd id="cutoffs">0</dd>
+            </div>
+            <div>
+              <dt>LMR / null cuts</dt>
+              <dd id="reductions">0 / 0</dd>
+            </div>
+          </dl>
+          <div class="section-heading">
+            <h3>Score by completed depth</h3>
+            <span>White's view</span>
+          </div>
+          <svg
+            id="score-chart"
+            viewBox="0 0 480 145"
+            role="img"
+            aria-label="Score chart awaiting search"
+          ></svg>
+        </section>
+        <section id="table-panel">
+          <div class="section-heading">
+            <h3>Move ordering</h3>
+            <span>Root candidates</span>
+          </div>
+          <ol id="move-order" class="move-order">
+            <li>Run a search to inspect the order.</li>
+          </ol>
+          <details class="trace-details">
+            <summary>Inspect sampled cutoffs &amp; scores</summary>
+            <div id="trace-list" class="trace-list">
+              No internal nodes sampled yet.
+            </div>
+          </details>
+          <h3>Transposition table</h3>
+          <div id="tt-detail" class="tt-detail">
+            Full 64-bit keys · four-way clusters<br />8 MiB allocation target ·
+            mate-distance scores
+          </div>
+          <p class="fine" id="hashfull">
+            Current-generation sample occupancy: 0‰
+          </p>
+        </section>
+        <details class="about">
+          <summary>How to read this workbench</summary>
+          <p>
+            Search scores favour the side to move internally; the main score and
+            chart are shown from White’s perspective. Mate scores are search
+            results, not promises about unfinished depths.
+          </p>
+          <p>
+            Each completed root iteration evaluates all legal first moves. The
+            three boards show the best completed candidates; a partial deeper
+            iteration does not replace them. “One depth” starts a new search
+            capped one depth beyond the last completed search.
+          </p>
+          <p>
+            Classic evaluation is a new, explainable browser mode. Optional NNUE
+            uses the supplied Java engine’s feature architecture and weights.
+            Browser search is an adaptation, not a byte-for-byte port of every
+            Java heuristic.
+          </p>
+          <p>
+            <a href="PORT-STATUS.md">Port details &amp; validation ↗</a> ·
+            <a href="CREDITS.html">Sources &amp; licences ↗</a>
+          </p>
+        </details>
+      </aside>
+    </div>
+    <footer>
+      <strong>JengaCode / KingFischer</strong
+      ><span>Independent software. A deeper game.</span
+      ><a href="CREDITS.html">Code, artwork &amp; credits ↗</a>
+    </footer>
+    <dialog id="promotion">
+      <h2>Promote your pawn</h2>
+      <p>Choose a piece.</p>
+      <div id="promotion-choices"></div>
+    </dialog>
+    <noscript>This chess workbench needs JavaScript enabled.</noscript>
+  </body>
+</html>

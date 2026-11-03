@@ -1,0 +1,18 @@
+[
+  {
+    "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    "depth": 2,
+    "staticPreview": false,
+    "nodes": 1856,
+    "best": "e2e4",
+    "ms": 604
+  },
+  {
+    "fen": "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1",
+    "depth": 0,
+    "staticPreview": true,
+    "nodes": 1696,
+    "best": "e5g6",
+    "ms": 603
+  }
+]

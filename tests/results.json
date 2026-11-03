@@ -1,0 +1,140 @@
+{
+  "perft": [
+    {
+      "name": "start",
+      "depth": 1,
+      "nodes": 20,
+      "ms": 1
+    },
+    {
+      "name": "start",
+      "depth": 2,
+      "nodes": 400,
+      "ms": 3
+    },
+    {
+      "name": "start",
+      "depth": 3,
+      "nodes": 8902,
+      "ms": 32
+    },
+    {
+      "name": "start",
+      "depth": 4,
+      "nodes": 197281,
+      "ms": 561
+    },
+    {
+      "name": "kiwipete",
+      "depth": 1,
+      "nodes": 48,
+      "ms": 0
+    },
+    {
+      "name": "kiwipete",
+      "depth": 2,
+      "nodes": 2039,
+      "ms": 13
+    },
+    {
+      "name": "kiwipete",
+      "depth": 3,
+      "nodes": 97862,
+      "ms": 279
+    },
+    {
+      "name": "rook ending",
+      "depth": 1,
+      "nodes": 14,
+      "ms": 0
+    },
+    {
+      "name": "rook ending",
+      "depth": 2,
+      "nodes": 191,
+      "ms": 1
+    },
+    {
+      "name": "rook ending",
+      "depth": 3,
+      "nodes": 2812,
+      "ms": 13
+    },
+    {
+      "name": "promotion/castling",
+      "depth": 1,
+      "nodes": 6,
+      "ms": 0
+    },
+    {
+      "name": "promotion/castling",
+      "depth": 2,
+      "nodes": 264,
+      "ms": 1
+    },
+    {
+      "name": "promotion/castling",
+      "depth": 3,
+      "nodes": 9467,
+      "ms": 30
+    },
+    {
+      "name": "underpromotion",
+      "depth": 1,
+      "nodes": 44,
+      "ms": 0
+    },
+    {
+      "name": "underpromotion",
+      "depth": 2,
+      "nodes": 1486,
+      "ms": 5
+    },
+    {
+      "name": "underpromotion",
+      "depth": 3,
+      "nodes": 62379,
+      "ms": 189
+    }
+  ],
+  "rules": [
+    "Incremental hash and full make/undo restoration across 80 plies",
+    "Threefold repetition",
+    "Pinned en passant rejected and absent from repetition hash",
+    "TT full-key lookup, bound and mate-distance normalisation"
+  ],
+  "search": [
+    {
+      "name": "start deadline",
+      "depth": 3,
+      "nodes": 2720,
+      "bestMove": "b1c3",
+      "elapsedMs": 302
+    },
+    {
+      "name": "mate in one",
+      "depth": 1,
+      "nodes": 54,
+      "bestMove": "f7g7",
+      "elapsedMs": 6
+    },
+    {
+      "name": "check evasion",
+      "depth": 4,
+      "nodes": 789,
+      "bestMove": "e1d2",
+      "elapsedMs": 52
+    },
+    {
+      "name": "promotion",
+      "depth": 1,
+      "nodes": 20,
+      "bestMove": "a7a8q",
+      "elapsedMs": 4
+    },
+    {
+      "name": "8-ply engine match",
+      "fen": "r2qkb1r/ppp1pppp/2n2n2/3p1b2/3P1B2/2N2N2/PPP1PPPP/R2QKB1R w KQkq - 2 5"
+    }
+  ]
+}

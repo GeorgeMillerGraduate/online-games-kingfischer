@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>KingFischer — credits</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main style="max-width: 850px; padding: 50px 25px; margin: auto">
+      <a href="index.html">← Return to KingFischer</a>
+      <h1 style="margin-top: 30px">Sources &amp; credits</h1>
+      <h2>Engine and browser port</h2>
+      <p>
+        Based on the KingFischer2 Java source supplied by George Miller.
+        Original source is included under <code>reference/java/</code>.
+        JavaScript adaptation, graphics and browser integration prepared for
+        JengaCode. Distributed under <a href="COPYING.txt">GPL-3.0-or-later</a>.
+      </p>
+      <p>
+        The supplied engine contains Stockfish-derived code and NNUE
+        architecture. Retain <a href="NOTICE.md">NOTICE.md</a> and
+        <a href="STOCKFISH-AUTHORS">STOCKFISH-AUTHORS</a>. See
+        <a href="https://github.com/official-stockfish/Stockfish"
+          >Stockfish source</a
+        >
+        and
+        <a href="https://github.com/official-stockfish/nnue-pytorch"
+          >NNUE training tools</a
+        >. The included nn-1a298aa575a0.nnue weights are copied unchanged from
+        the supplied Java project.
+      </p>
+      <p>
+        <a href="PORT-STATUS.md">Port status and actual validation results</a>.
+        This browser search is not identical to Stockfish or to every heuristic
+        in the Java search. Effort levels are not measured Elo ratings.
+      </p>
+      <h2>Chess pieces</h2>
+      <p>
+        Cburnett SVG chess pieces by Colin M. L. Burnett, obtained from the
+        official
+        <a
+          href="https://github.com/lichess-org/lila/tree/master/public/piece/cburnett"
+          >Lichess lila collection</a
+        >, GPLv2 or later as recorded in the
+        <a href="assets/lichess-COPYING.md">upstream COPYING file</a>. SVG
+        source files are included in assets/pieces. The app uses the simple,
+        legible Lichess style; it is not affiliated with Lichess. Lichess logos
+        and proprietary branding are not used.
+      </p>
+      <h2>jQuery</h2>
+      <p>
+        jQuery 3.7.1 by the OpenJS Foundation and contributors,
+        <a href="vendor/jquery-LICENSE.txt">MIT licence</a>. Served locally;
+        source provenance:
+        <a href="https://jquery.com/download/">jquery.com</a>.
+      </p>
+      <h2>Artwork</h2>
+      <p>
+        Kingfisher, chess king and imagined Victorian Bobby Fischer portrait:
+        original AI-generated editorial artwork created for JengaCode, 31
+        October 2026. The portrait is an artistic interpretation, not a
+        historical photograph. All interface text, chess diagrams, scores and
+        statistics are rendered from HTML/SVG and actual game/search state.
+      </p>
+      <p>
+        The compass emblem is an original inline geometric drawing for this
+        package. Fonts use system Georgia and Arial; no font downloads.
+      </p>
+      <p>
+        No advertising, data collection, API keys or online engine services.
+      </p>
+    </main>
+  </body>
+</html>

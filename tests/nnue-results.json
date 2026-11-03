@@ -1,0 +1,6 @@
+{
+  "legalMoveSets": 1513,
+  "zobristHashes": 1513,
+  "nnueRawAndEvaluation": 72,
+  "incrementalAndUndoPositions": 45
+}
